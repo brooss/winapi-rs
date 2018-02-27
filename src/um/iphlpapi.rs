@@ -7,11 +7,16 @@
 //! Internet Protocol Helper Interface Prototypes and structure definitions
 use ctypes::{c_char};
 use shared::minwindef::{BOOL, BYTE, DWORD, PULONG, UINT};
-use shared::ntdef::TIME;
 
 pub const MAX_ADAPTER_ADDRESS_LENGTH: usize = 8;
 pub const MAX_ADAPTER_DESCRIPTION_LENGTH: usize = 128;
 pub const MAX_ADAPTER_NAME_LENGTH: usize = 256;
+
+#[cfg(target_arch = "x86")]
+pub type time_t = u32;
+#[cfg(target_arch = "x86_64")]
+pub type time_t = u64;
+
 
 STRUCT!{struct IP_ADDRESS_STRING{
     String: [c_char; 4*4],
@@ -47,8 +52,8 @@ STRUCT!{struct IP_ADAPTER_INFO {
     HaveWins: BOOL,
     PrimaryWinsServer: IP_ADDR_STRING,
     SecondaryWinsServer: IP_ADDR_STRING,
-    LeaseObtained: TIME,
-    LeaseExpires: TIME,
+    LeaseObtained: time_t,
+    LeaseExpires: time_t,
 }}
 
 pub type PIP_ADAPTER_INFO = *mut IP_ADAPTER_INFO;
